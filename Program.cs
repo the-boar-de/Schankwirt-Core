@@ -19,10 +19,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
+using System.Diagnostics;
 
 
 //---------------------------------------------------------------------------
-
 class Program
 {
     //Global 
@@ -40,7 +41,14 @@ class Program
     //Docker Input - Bot
     //Discord Project - Variables
     private ulong guildId;
+
+
+    private readonly string Url = "http://localhost:8080";
+
+    private static List<Task> TaskList = new List<Task>();
+     
     
+
 
 //---------------------------------------------------------------------------    
 // MAIN
@@ -49,6 +57,7 @@ class Program
     // Main Entry Point
     static async Task Main(string[] args)
     {
+  
         var program = new Program();
         // Create Host
         var host = Host.CreateDefaultBuilder(args)
@@ -67,17 +76,47 @@ class Program
                 db.Database.Migrate();  // Führt alle Migrations aus!
             }
     
-            _ = Task.Run(() => program.taskClientAsync(host.Services));
+
+            // Starting the servers
+            _ = Task.Run(() => program.HttpServer(args));
+
+            _ = Task.Run(() => program.DiscordClient(host.Services));
+
 
             await host.RunAsync();
+
+    }
+
+//---------------------------------------------------------------------------
+// Http Server
+//---------------------------------------------------------------------------
+public async Task HttpServer(string[] args)
+{
+        var Webserver = WebApplication.CreateBuilder(args);
+
+        var app = Webserver.Build();
+    
+        app.Run(Url);
+
+}
+
+//---------------------------------------------------------------------------
+//Discord Connection Tasks
+//---------------------------------------------------------------------------
+public async Task<List<Task>> DiscordConnections()
+    {
+
+        
+
+        return TaskList;
     }
 
 
-//---------------------------------------------------------------------------
-//WebSocket Task
-//---------------------------------------------------------------------------
 
-    public async Task taskClientAsync(IServiceProvider services)
+//---------------------------------------------------------------------------
+//Discord Client Tasks
+//---------------------------------------------------------------------------
+    public async Task DiscordClient(IServiceProvider services)
     {
 
         //Discord Config
@@ -182,3 +221,4 @@ private async Task TaskOnJoinedGuilds(SocketGuild guild)
         }
     }
 }
+
