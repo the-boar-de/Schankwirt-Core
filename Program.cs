@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Web;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 
 //---------------------------------------------------------------------------
@@ -95,7 +96,13 @@ public async Task HttpServer(string[] args)
         var Webserver = WebApplication.CreateBuilder(args);
 
         var app = Webserver.Build();
-    
+
+
+        //Map functions 
+        ApiService.Mapping(app);
+            
+            
+        // start server
         app.Run(Url);
 
 }
