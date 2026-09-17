@@ -44,11 +44,12 @@ class Program
     private ulong guildId;
 
 
-    private readonly string Url = "http://localhost:8080";
+    private static readonly string Url = "http://localhost:8080";
 
     private static List<Task> TaskList = new List<Task>();
      
     
+
 
 
 //---------------------------------------------------------------------------    
@@ -58,7 +59,9 @@ class Program
     // Main Entry Point
     static async Task Main(string[] args)
     {
-  
+    Command  command = new Command(2, "test");
+     Console.WriteLine($"Command: {command.baseStruct.classname} with ID: {command.baseStruct.classId}");
+
         var program = new Program();
         // Create Host
         var host = Host.CreateDefaultBuilder(args)
@@ -181,9 +184,6 @@ public async Task<List<Task>> DiscordConnections()
         await Task.Delay(-1);
 
     }
-//===========================================================================
-//Task Methods
-//===========================================================================
 
 //---------------------------------------------------------------------------
 //Task On Joined Guild
